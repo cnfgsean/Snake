@@ -2,6 +2,7 @@ var canvas = document.querySelector("canvas");
 var ctx = canvas.getContext("2d");
 const dimension = 500;
 const scale = dimension / 25;
+var timeDelay = 150;
 
 canvas.width = canvas.height = dimension;
 
@@ -94,6 +95,16 @@ function Snake() {
         }
         return false;
     }
+
+    this.checkCollision = function() {
+        for (let i = 0; i < this.tail.length; i++) {
+            if (this.x == this.tail[i].x && this.y == this.tail[i].y) {
+                console.log("COLLISION");
+                this.total = 0;
+                this.tail = [];
+            }
+        }
+    }
 }
 
 function Fruit() {
@@ -121,7 +132,13 @@ function init() {
 function play() {
     window.setInterval(() => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = `${dimension * 0.7}px Arial`;
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#565656";
+        ctx.fillText(String(snake.total), canvas.width / 2, (canvas.height / 2) + dimension * 0.3);
+
         snake.update();
+        snake.checkCollision();
         fruit.draw();
         snake.draw();
 
@@ -129,7 +146,7 @@ function play() {
             // console.log("EAT");
             fruit.newLocation();
         }
-    }, 250);
+    }, timeDelay);
 }
 
 init();
